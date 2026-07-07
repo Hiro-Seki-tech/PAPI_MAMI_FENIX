@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ただいま建設中</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #1a252f;
+            --text-sub: #626d77;
+            --construction-yellow: #f1c40f; /* スタイリッシュで視認性の高いミモザイエロー */
+            --construction-dark: #2c3e50;   /* 誠実さと重厚感のあるディープネイビー */
+            --stripes-color: rgba(44, 62, 80, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 画面上下に配置した、上品な細い工事用ストライプ（虎縞）のインジケーター */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: repeating-linear-gradient(
+                -45deg,
+                var(--construction-yellow),
+                var(--construction-yellow) 10px,
+                var(--construction-dark) 10px,
+                var(--construction-dark) 20px
+            );
+        }
+        body::before { top: 0; }
+        body::after { bottom: 0; }
+
+        .container {
+            text-align: center;
+            padding: 2.5rem;
+            max-width: 440px;
+            width: 100%;
+        }
+
+        /* 工事用バリケードをモダンにモディファイしたアイコン */
+        .barricade-icon {
+            width: 80px;
+            height: 12px;
+            margin: 0 auto 2rem;
+            background: repeating-linear-gradient(
+                -45deg,
+                var(--construction-yellow),
+                var(--construction-yellow) 8px,
+                var(--construction-dark) 8px,
+                var(--construction-dark) 16px
+            );
+            border-radius: 2px;
+            position: relative;
+        }
+        .barricade-icon::before, .barricade-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            width: 3px;
+            height: 12px;
+            background-color: var(--construction-dark);
+        }
+        .barricade-icon::before { left: 15px; transform: rotate(-15deg); }
+        .barricade-icon::after { right: 15px; transform: rotate(15deg); }
+
+        .status-badge {
+            display: inline-block;
+            background-color: var(--construction-dark);
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            color: var(--construction-dark);
+        }
+
+        p {
+            font-size: 0.875rem;
+            color: var(--text-sub);
+            line-height: 1.7;
+            margin-bottom: 3rem;
+        }
+
+        /* 3秒間でイエローからネイビーに染まるプログレスバー */
+        .progress-container {
+            width: 100%;
+            height: 3px;
+            background-color: #f0f2f5;
+            position: relative;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--construction-yellow), var(--construction-dark));
+            animation: load 3s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes load {
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="barricade-icon"></div>
+
+    <div class="status-badge">Under Construction</div>
+    <h1>ただいま、工事中。</h1>
+    <p>現在、サイトの改修作業を行っております。<br>3秒後に自動的に前の画面へ戻ります。</p>
+    
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 3秒（3000ミリ秒）後に直前のページへ戻る
+        setTimeout(() => {
+            if (document.referrer) {
+                window.history.back();
+            } else {
+                // 万が一、直前の履歴がない場合のセーフティとしてトップへ遷移
+                window.location.href = '/';
+            }
+        }, 3000);
+    });
+</script>
+
+</body>
+</html>
