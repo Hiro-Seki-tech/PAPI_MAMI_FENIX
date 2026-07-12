@@ -143,7 +143,7 @@
 
     <div class="status-badge">Under Construction</div>
     <h1>ただいま、工事中。</h1>
-    <p>現在、サイトの改修作業を行っております。<br>3秒後に自動的に前の画面へ戻ります。</p>
+    <p>現在、サイトの改修作業を行っております。<br>3秒後にリンクページへ移動します。</p>
     
     <div class="progress-container">
         <div class="progress-bar"></div>
@@ -152,42 +152,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 履歴やリファラーが使えない場合の戻り先。
-        // 工事中.html と同じフォルダにあるトップページを想定しています。
-        const fallbackUrl = './index.html';
-
+        // 3秒後に指定したリンクページへ直接移動
         setTimeout(() => {
-            const currentUrl = new URL(window.location.href);
-            const referrer = document.referrer;
-
-            // 元ページのURLが分かる場合は、履歴操作より確実な直接遷移を使う。
-            if (referrer) {
-                try {
-                    const referrerUrl = new URL(referrer);
-
-                    // 同じ工事中ページへ戻ってループするのを防止。
-                    if (referrerUrl.href !== currentUrl.href) {
-                        window.location.replace(referrerUrl.href);
-                        return;
-                    }
-                } catch (error) {
-                    console.warn('戻り先URLを読み取れませんでした。', error);
-                }
-            }
-
-            // リファラーが取得できなくても履歴があれば戻る。
-            if (window.history.length > 1) {
-                window.history.back();
-
-                // history.back() が効かない環境向けの最終セーフティ。
-                setTimeout(() => {
-                    window.location.replace(fallbackUrl);
-                }, 800);
-                return;
-            }
-
-            // 直接開かれた場合などはトップページへ。
-            window.location.replace(fallbackUrl);
+            window.location.href = 'https://hiro-seki-tech.github.io/Produce-your-Life-with-IP/links/index.html';
         }, 3000);
     });
 </script>
