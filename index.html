@@ -152,14 +152,42 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 3秒（3000ミリ秒）後に直前のページへ戻る
+        // 履歴やリファラーが使えない場合の戻り先。
+        // 工事中.html と同じフォルダにあるトップページを想定しています。
+        const fallbackUrl = './index.html';
+
         setTimeout(() => {
-            if (document.referrer) {
-                window.history.back();
-            } else {
-                // 万が一、直前の履歴がない場合のセーフティとしてトップへ遷移
-                window.location.href = '/';
+            const currentUrl = new URL(window.location.href);
+            const referrer = document.referrer;
+
+            // 元ページのURLが分かる場合は、履歴操作より確実な直接遷移を使う。
+            if (referrer) {
+                try {
+                    const referrerUrl = new URL(referrer);
+
+                    // 同じ工事中ページへ戻ってループするのを防止。
+                    if (referrerUrl.href !== currentUrl.href) {
+                        window.location.replace(referrerUrl.href);
+                        return;
+                    }
+                } catch (error) {
+                    console.warn('戻り先URLを読み取れませんでした。', error);
+                }
             }
+
+            // リファラーが取得できなくても履歴があれば戻る。
+            if (window.history.length > 1) {
+                window.history.back();
+
+                // history.back() が効かない環境向けの最終セーフティ。
+                setTimeout(() => {
+                    window.location.replace(fallbackUrl);
+                }, 800);
+                return;
+            }
+
+            // 直接開かれた場合などはトップページへ。
+            window.location.replace(fallbackUrl);
         }, 3000);
     });
 </script>
